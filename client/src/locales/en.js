@@ -15,6 +15,11 @@ export default {
   // Dashboard
   dashboard: {
     title: 'Overview',
+    actions: {
+      createPO: 'Create PO',
+      viewPO: 'View PO',
+      actions: 'Actions'
+    },
     kpi: {
       title: 'Key Performance Indicators',
       inventoryTurnover: 'Inventory Turnover Rate',
@@ -143,6 +148,8 @@ export default {
     costBreakdown: 'Procurement + Operational + Labor + Overhead',
     margin: 'margin',
     perOrderRevenue: 'Per order revenue',
+    revenueTooltip: 'Revenue',
+    costsTooltip: 'Costs',
     revenueVsCosts: {
       title: 'Monthly Revenue vs Costs',
       revenue: 'Revenue',
@@ -197,7 +204,8 @@ export default {
     category: 'Category',
     orderStatus: 'Order Status',
     all: 'All',
-    allMonths: 'All Months'
+    allMonths: 'All Months',
+    resetAll: 'Reset all filters'
   },
 
   // Statuses
@@ -345,6 +353,9 @@ export default {
     clear: 'Clear',
     noDeficits: 'All items are adequately stocked — no restocking required.',
     enterBudget: 'Showing all deficit items. Enter a budget ceiling to clip the list.',
+    itemSingular: 'item',
+    itemPlural: 'items',
+    skippedOverBudget: 'skipped — over budget',
     stats: {
       belowReorder: 'Items Below Reorder Point',
       withinBudget: 'Within Budget',
@@ -386,6 +397,7 @@ export default {
     search: 'Search',
     filter: 'Filter',
     export: 'Export',
-    items: 'items'
+    items: 'items',
+    deleteTask: 'Delete task'
   }
 }

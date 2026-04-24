@@ -65,9 +65,9 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              {{ recommendations.length }} {{ recommendations.length === 1 ? 'item' : 'items' }}
+              {{ recommendations.length }} {{ recommendations.length === 1 ? t('restocking.itemSingular') : t('restocking.itemPlural') }}
               <span v-if="summary && summary.items_skipped > 0" class="skipped-note">
-                ({{ summary.items_skipped }} skipped — over budget)
+                ({{ summary.items_skipped }} {{ t('restocking.skippedOverBudget') }})
               </span>
             </h3>
           </div>
@@ -92,9 +92,9 @@
               <tbody>
                 <tr v-for="rec in recommendations" :key="rec.sku">
                   <td><code class="sku">{{ rec.sku }}</code></td>
-                  <td>{{ rec.name }}</td>
-                  <td>{{ rec.category }}</td>
-                  <td>{{ rec.warehouse }}</td>
+                  <td>{{ translateProductName(rec.name) }}</td>
+                  <td>{{ translateCategory(rec.category) }}</td>
+                  <td>{{ translateWarehouse(rec.warehouse) }}</td>
                   <td class="num">{{ rec.quantity_on_hand }}</td>
                   <td class="num">{{ rec.reorder_point }}</td>
                   <td class="num deficit">{{ rec.deficit }}</td>
@@ -102,10 +102,10 @@
                   <td class="num">${{ rec.unit_cost.toFixed(2) }}</td>
                   <td class="num cost">${{ formatNumber(rec.estimated_cost) }}</td>
                   <td>
-                    <span :class="['badge', rec.trend]">{{ rec.trend }}</span>
+                    <span :class="['badge', rec.trend]">{{ t(`trends.${rec.trend}`) }}</span>
                   </td>
                   <td>
-                    <span :class="['badge', rec.priority]">{{ rec.priority }}</span>
+                    <span :class="['badge', rec.priority]">{{ t(`priority.${rec.priority}`) }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -127,7 +127,18 @@ export default {
   name: 'Restocking',
   setup() {
     const { getCurrentFilters, selectedLocation, selectedCategory } = useFilters()
-    const { t } = useI18n()
+    const { t, translateWarehouse, translateProductName } = useI18n()
+
+    const translateCategory = (category) => {
+      const categoryMap = {
+        'Circuit Boards': t('categories.circuitBoards'),
+        'Sensors': t('categories.sensors'),
+        'Actuators': t('categories.actuators'),
+        'Controllers': t('categories.controllers'),
+        'Power Supplies': t('categories.powerSupplies')
+      }
+      return categoryMap[category] || category
+    }
 
     const loading = ref(true)
     const error = ref(null)
@@ -177,7 +188,8 @@ export default {
     return {
       loading, error, recommendations, summary,
       budgetInput, activeBudget, budgetRemaining,
-      applyBudget, clearBudget, formatNumber, t
+      applyBudget, clearBudget, formatNumber, t,
+      translateCategory, translateWarehouse, translateProductName
     }
   }
 }
