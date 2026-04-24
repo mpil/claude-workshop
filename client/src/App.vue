@@ -255,18 +255,10 @@ body {
 }
 
 .nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
-}
-
-.nav-tabs a.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #2563eb;
+  color: #6366f1;
+  background: #eef2ff;
+  border-left: 3px solid #6366f1;
+  padding-left: calc(1.25rem - 3px);
 }
 
 .main-content {
@@ -283,10 +275,10 @@ body {
 
 .page-header h2 {
   font-size: 1.875rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #0f172a;
   margin-bottom: 0.375rem;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
 }
 
 .page-header p {
@@ -306,12 +298,14 @@ body {
   padding: 1.25rem;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
+  border-top: 4px solid #6366f1;
   transition: all 0.2s ease;
 }
 
 .stat-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-top-color: #6366f1;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
@@ -343,7 +337,7 @@ body {
 }
 
 .stat-card.info .stat-value {
-  color: #2563eb;
+  color: #6366f1;
 }
 
 .card {
@@ -368,6 +362,8 @@ body {
   font-weight: 700;
   color: #0f172a;
   letter-spacing: -0.025em;
+  border-left: 3px solid #6366f1;
+  padding-left: 0.625rem;
 }
 
 .table-container {
@@ -380,7 +376,7 @@ table {
 }
 
 thead {
-  background: #f8fafc;
+  background: #e8edf4;
   border-top: 1px solid #e2e8f0;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -389,7 +385,7 @@ th {
   text-align: left;
   padding: 0.5rem 0.75rem;
   font-weight: 600;
-  color: #475569;
+  color: #334155;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -413,7 +409,7 @@ tbody tr:hover {
 .badge {
   display: inline-block;
   padding: 0.313rem 0.75rem;
-  border-radius: 6px;
+  border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -436,8 +432,8 @@ tbody tr:hover {
 }
 
 .badge.info {
-  background: #dbeafe;
-  color: #1e40af;
+  background: #e0e7ff;
+  color: #4338ca;
 }
 
 .badge.increasing {
