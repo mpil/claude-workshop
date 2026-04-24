@@ -328,6 +328,6 @@ export default {
 
 .cost {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 </style>
