@@ -29,6 +29,20 @@
             {{ t('nav.restocking') }}
           </router-link>
         </nav>
+        <button class="theme-toggle" @click="toggleTheme" :title="isDark ? t('theme.switchToLight') : t('theme.switchToDark')">
+          <!-- Moon icon when light (click to go dark) -->
+          <svg v-if="!isDark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <!-- Sun icon when dark (click to go light) -->
+          <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </button>
         <LanguageSwitcher />
         <ProfileMenu
           @show-profile-details="showProfileDetails = true"
@@ -62,6 +76,7 @@ import { ref, onMounted, computed } from 'vue'
 import { api } from './api'
 import { useAuth } from './composables/useAuth'
 import { useI18n } from './composables/useI18n'
+import { useTheme } from './composables/useTheme'
 import FilterBar from './components/FilterBar.vue'
 import ProfileMenu from './components/ProfileMenu.vue'
 import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
@@ -80,6 +95,7 @@ export default {
   setup() {
     const { currentUser } = useAuth()
     const { t } = useI18n()
+    const { isDark, toggleTheme } = useTheme()
     const showProfileDetails = ref(false)
     const showTasks = ref(false)
     const apiTasks = ref([])
@@ -153,6 +169,8 @@ export default {
 
     return {
       t,
+      isDark,
+      toggleTheme,
       showProfileDetails,
       showTasks,
       tasks,
@@ -165,6 +183,42 @@ export default {
 </script>
 
 <style>
+:root {
+  --bg-app: #f8fafc;
+  --bg-nav: #ffffff;
+  --bg-card: #ffffff;
+  --bg-table-head: #e8edf4;
+  --bg-hover: #f8fafc;
+  --bg-input: #ffffff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --text-table-head: #334155;
+  --shadow-nav: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card: none;
+  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg-app: #0f172a;
+  --bg-nav: #1e293b;
+  --bg-card: #1e293b;
+  --bg-table-head: #273548;
+  --bg-hover: #273548;
+  --bg-input: #273548;
+  --border: #334155;
+  --border-strong: #475569;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-table-head: #cbd5e1;
+  --shadow-nav: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -173,8 +227,8 @@ export default {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--bg-app);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -186,9 +240,9 @@ body {
 }
 
 .top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  background: var(--bg-nav);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-nav);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -221,16 +275,16 @@ body {
 .logo h1 {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   letter-spacing: -0.025em;
 }
 
 .subtitle {
   font-size: 0.813rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 400;
   padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid var(--border);
 }
 
 .nav-tabs {
@@ -240,7 +294,7 @@ body {
 
 .nav-tabs a {
   padding: 0.625rem 1.25rem;
-  color: #64748b;
+  color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.938rem;
@@ -250,8 +304,8 @@ body {
 }
 
 .nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--text-primary);
+  background: var(--bg-hover);
 }
 
 .nav-tabs a.active {
@@ -276,13 +330,13 @@ body {
 .page-header h2 {
   font-size: 1.875rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   margin-bottom: 0.375rem;
   letter-spacing: -0.03em;
 }
 
 .page-header p {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.938rem;
 }
 
@@ -294,22 +348,23 @@ body {
 }
 
 .stat-card {
-  background: white;
+  background: var(--bg-card);
   padding: 1.25rem;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-top: 4px solid #6366f1;
   transition: all 0.2s ease;
+  box-shadow: var(--shadow-card);
 }
 
 .stat-card:hover {
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
   border-top-color: #6366f1;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-hover);
 }
 
 .stat-label {
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -320,7 +375,7 @@ body {
 .stat-value {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   letter-spacing: -0.025em;
 }
 
@@ -341,11 +396,12 @@ body {
 }
 
 .card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 10px;
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-card);
 }
 
 .card-header {
@@ -354,13 +410,13 @@ body {
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 0.875rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   letter-spacing: -0.025em;
   border-left: 3px solid #6366f1;
   padding-left: 0.625rem;
@@ -376,16 +432,16 @@ table {
 }
 
 thead {
-  background: #e8edf4;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--bg-table-head);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 th {
   text-align: left;
   padding: 0.5rem 0.75rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-table-head);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -393,8 +449,8 @@ th {
 
 td {
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid #f1f5f9;
-  color: #334155;
+  border-top: 1px solid var(--border);
+  color: var(--text-primary);
   font-size: 0.875rem;
 }
 
@@ -403,7 +459,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f8fafc;
+  background: var(--bg-hover);
 }
 
 .badge {
@@ -469,7 +525,7 @@ tbody tr:hover {
 .loading {
   text-align: center;
   padding: 3rem;
-  color: #64748b;
+  color: var(--text-secondary);
   font-size: 0.938rem;
 }
 
@@ -481,5 +537,23 @@ tbody tr:hover {
   border-radius: 8px;
   margin: 1rem 0;
   font-size: 0.938rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.375rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 </style>

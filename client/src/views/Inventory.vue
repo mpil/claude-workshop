@@ -244,13 +244,13 @@ export default {
   align-items: center;
   gap: 1.5rem;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -273,18 +273,18 @@ export default {
 .search-input {
   width: 100%;
   padding: 0.5rem 2.5rem 0.5rem 2.5rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   font-size: 0.875rem;
-  color: #0f172a;
-  background: #f8fafc;
+  color: var(--text-primary);
+  background: var(--bg-hover);
   transition: all 0.2s;
 }
 
 .search-input:focus {
   outline: none;
   border-color: #3b82f6;
-  background: white;
+  background: var(--bg-input);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 

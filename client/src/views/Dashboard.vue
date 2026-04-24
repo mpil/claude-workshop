@@ -759,8 +759,8 @@ export default {
 }
 
 .kpi-card {
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 1rem;
 }
@@ -780,7 +780,7 @@ export default {
 .kpi-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   letter-spacing: -0.025em;
 }
@@ -937,7 +937,7 @@ export default {
 .health-metric-value {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   letter-spacing: -0.025em;
 }
 
@@ -978,7 +978,7 @@ export default {
 .h-bar-container {
   flex: 1;
   height: 32px;
-  background: #f8fafc;
+  background: var(--bg-hover);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -1011,7 +1011,7 @@ export default {
   padding-right: 1rem;
   font-size: 0.75rem;
   color: #94a3b8;
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid var(--border);
 }
 
 .line-chart-area {
@@ -1130,10 +1130,12 @@ export default {
 .task-input {
   flex: 1;
   padding: 0.75rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--border);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: border-color 0.2s ease;
+  background: var(--bg-input);
+  color: var(--text-primary);
 }
 
 .task-input:focus {
@@ -1179,15 +1181,15 @@ export default {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: #f8fafc;
+  background: var(--bg-hover);
   border-radius: 8px;
   border: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
 .task-item:hover {
-  border-color: #e2e8f0;
-  background: white;
+  border-color: var(--border);
+  background: var(--bg-card);
 }
 
 .task-item.completed {
@@ -1210,7 +1212,7 @@ export default {
   flex: 1;
   cursor: pointer;
   user-select: none;
-  color: #0f172a;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
