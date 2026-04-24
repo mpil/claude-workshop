@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Components — Capabilities Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --purple:       #A100FF;
+    --purple-dark:  #460073;
+    --purple-mid:   #7500C0;
+    --purple-light: #C2A3FF;
+    --purple-pale:  #E6DCFF;
+    --pink:         #FF50A0;
+    --teal:         #05F2DB;
+    --blue:         #224BFF;
+    --black:        #000000;
+    --white:        #FFFFFF;
+    --gray-100:     #F5F5F5;
+    --gray-200:     #E8E8E8;
+    --gray-500:     #757575;
+    --gray-700:     #424242;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', 'Graphik Regular', 'Segoe UI', system-ui, sans-serif;
+    background: #1a1a1a;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Nav ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 20px; background: #111; flex-shrink: 0;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .acn-logo { font-size: 15px; font-weight: 700; color: var(--purple); letter-spacing: -0.02em; }
+  .nav-title { font-size: 12px; color: #555; }
+  .nav-controls { display: flex; align-items: center; gap: 10px; }
+  .nav-controls button {
+    background: #222; border: 1px solid #333; color: #888;
+    padding: 4px 14px; border-radius: 4px; cursor: pointer;
+    font-size: 12px; font-family: inherit; transition: all 0.15s;
+  }
+  .nav-controls button:hover { background: #333; color: #fff; }
+  .nav-controls button:disabled { opacity: 0.25; cursor: default; }
+  .nav-counter { font-size: 12px; color: #444; min-width: 48px; text-align: center; }
+
+  /* ── Deck & Slides ── */
+  .deck { flex: 1; overflow: hidden; position: relative; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+  }
+  .slide.active { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ── Slide Variants ── */
+  .slide-cover  { background: var(--white); flex-direction: row; }
+  .slide-dark   { background: var(--purple-dark); padding: 36px 56px; }
+  .slide-white  { background: var(--white);        padding: 36px 56px; }
+  .slide-gray   { background: var(--gray-100);     padding: 36px 56px; }
+  .slide-closing{ background: var(--purple);       padding: 48px 64px; }
+
+  /* Cover specifics */
+  .cover-stripe { width: 8px; background: var(--purple); flex-shrink: 0; }
+  .cover-left {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: space-between; padding: 48px 56px;
+  }
+  .cover-right {
+    width: 42%; background: var(--purple-dark);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 48px 44px; gap: 24px;
+  }
+  .cover-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); }
+  .cover-title { font-size: 46px; font-weight: 700; line-height: 1.05; color: var(--black); }
+  .cover-title span { color: var(--purple); }
+  .cover-sub { font-size: 15px; color: var(--gray-500); }
+  .cover-footer { font-size: 11px; color: var(--gray-500); }
+  .cover-fact {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-left: 3px solid var(--purple-light);
+    border-radius: 6px; padding: 16px 18px;
+  }
+  .cover-fact-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 6px; }
+  .cover-fact-value { font-size: 22px; font-weight: 700; color: var(--white); }
+  .cover-fact-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* ── Typography ── */
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple); margin-bottom: 6px; }
+  .eyebrow.light { color: var(--purple-light); }
+  h2 { font-size: 34px; font-weight: 700; line-height: 1.1; color: var(--black); }
+  h2.light { color: var(--white); }
+  .rule { width: 40px; height: 3px; background: var(--purple); margin: 12px 0 16px; border-radius: 2px; flex-shrink: 0; }
+  .rule.light { background: var(--purple-light); }
+  p.body-text { font-size: 14px; color: var(--gray-700); line-height: 1.75; }
+  p.body-text.light { color: rgba(255,255,255,0.75); }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid; gap: 14px;
+    flex: 1; /* stretch to fill slide height */
+    align-content: stretch;
+  }
+  .card-grid.col2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.col3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: 10px; padding: 22px 24px;
+    border-top: 3px solid var(--purple);
+    display: flex; flex-direction: column;
+  }
+  .card.pink-top  { border-top-color: var(--pink); }
+  .card.teal-top  { border-top-color: var(--teal); }
+  .card.blue-top  { border-top-color: var(--blue); }
+  .card.gray-top  { border-top-color: var(--gray-500); border-top-width: 1px; background: #efefef; }
+  .card.dark {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: 3px solid var(--purple-light);
+  }
+  .card.dark h3   { color: var(--white); }
+  .card.dark p    { color: var(--purple-light); }
+  .card.dark .card-tag { color: rgba(194,163,255,0.7); }
+
+  .card-icon { margin-bottom: 12px; }
+  .card-icon svg { width: 26px; height: 26px; stroke-width: 1.5; fill: none; stroke: var(--purple); }
+  .card-icon.pink svg  { stroke: var(--pink); }
+  .card-icon.teal svg  { stroke: #009688; }
+  .card-icon.blue svg  { stroke: var(--blue); }
+  .card-icon.gray svg  { stroke: var(--gray-500); }
+  .card.dark .card-icon svg { stroke: var(--purple-light); }
+
+  .card-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); margin-bottom: 6px; }
+  .card-tag.pink  { color: var(--pink); }
+  .card-tag.teal  { color: #009688; }
+  .card-tag.blue  { color: var(--blue); }
+  .card-tag.gray  { color: var(--gray-500); }
+
+  .card h3 { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 8px; line-height: 1.3; }
+  .card p  { font-size: 13px; color: var(--gray-500); line-height: 1.6; flex: 1; }
+
+  /* ── Two-column layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; align-items: stretch; }
+  .two-col > * { display: flex; flex-direction: column; }
+
+  /* Bullets */
+  .bullets { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .bullet { display: flex; gap: 12px; align-items: flex-start; flex: 1; }
+  .bullet-icon { flex-shrink: 0; margin-top: 1px; }
+  .bullet-icon svg { width: 17px; height: 17px; stroke-width: 2; fill: none; stroke: var(--purple); }
+  .bullet-icon.light svg { stroke: var(--purple-light); }
+  .bullet p { font-size: 14px; color: var(--gray-700); line-height: 1.5; margin: 0; }
+  .bullet p.light { color: rgba(255,255,255,0.8); }
+  .bullet strong.light { color: var(--white); }
+
+  /* ── Timeline ── */
+  .timeline { display: flex; flex-direction: column; gap: 10px; flex: 1; justify-content: space-evenly; }
+  .tl-row { display: grid; grid-template-columns: 175px 1fr 70px; gap: 12px; align-items: center; }
+  .tl-label { font-size: 13px; color: var(--gray-700); font-weight: 500; }
+  .tl-track { background: var(--gray-200); border-radius: 4px; height: 30px; position: relative; overflow: hidden; }
+  .tl-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; position: absolute; white-space: nowrap; }
+  .tl-fill.purple { background: var(--purple); color: #fff; }
+  .tl-fill.pink   { background: var(--pink);   color: #fff; }
+  .tl-fill.teal   { background: #009688;       color: #fff; }
+  .tl-fill.pale   { background: var(--purple-pale); color: var(--purple-dark); }
+  .tl-fill.gray   { background: var(--gray-500); color: #fff; }
+  .tl-weeks { font-size: 12px; color: var(--gray-500); text-align: right; font-weight: 500; }
+
+  /* Week header for timeline */
+  .tl-header { display: grid; grid-template-columns: 175px 1fr 70px; gap: 12px; margin-bottom: 4px; }
+  .tl-header-spacer {}
+  .tl-week-labels { display: flex; justify-content: space-between; padding: 0 2px; }
+  .tl-week-labels span { font-size: 10px; color: var(--gray-500); }
+
+  /* ── Pricing ── */
+  .price-table { width: 100%; border-collapse: collapse; flex: 1; }
+  .price-table th {
+    text-align: left; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-500);
+    padding: 10px 14px; border-bottom: 2px solid var(--gray-200);
+  }
+  .price-table td { padding: 13px 14px; font-size: 14px; color: var(--gray-700); border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+  .price-table td:last-child { text-align: right; font-weight: 600; color: var(--black); }
+  .price-table tr.total td { font-weight: 700; font-size: 16px; color: var(--black); border-top: 2px solid var(--purple); border-bottom: none; background: var(--purple-pale); padding: 16px 14px; }
+  .price-table tr.optional td { color: #aaa; font-style: italic; }
+  .price-icon { display: inline-flex; align-items: center; gap: 8px; }
+  .price-icon svg { width: 16px; height: 16px; stroke: var(--purple); fill: none; stroke-width: 1.8; vertical-align: middle; }
+
+  /* ── Stats (Why Us slide) ── */
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 16px; }
+  .stat {
+    text-align: center; padding: 20px 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+  }
+  .stat-icon { margin: 0 auto 10px; }
+  .stat-icon svg { width: 28px; height: 28px; stroke: var(--purple-light); fill: none; stroke-width: 1.5; }
+  .stat-num { font-size: 38px; font-weight: 700; color: var(--white); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--purple-light); margin-top: 6px; line-height: 1.4; }
+
+  /* ── Closing ── */
+  .next-steps { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; flex: 1; justify-content: center; }
+  .next-step {
+    display: flex; gap: 20px; align-items: flex-start;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; padding: 20px 24px;
+  }
+  .next-step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: var(--white); flex-shrink: 0;
+  }
+  .next-step-body {}
+  .next-step-title { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .next-step-desc { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+
+  /* ── Dots ── */
+  .dots { display: flex; gap: 5px; justify-content: center; padding: 9px; background: #111; flex-shrink: 0; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #2e2e2e; cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: var(--purple); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <span class="acn-logo">accenture</span>
+    <span class="nav-title">× Meridian Components · RFP #MC-2026-0417</span>
+  </div>
+  <div class="nav-controls">
+    <button id="prev" onclick="go(-1)" disabled>&#8592; Prev</button>
+    <span class="nav-counter" id="counter">1 / 12</span>
+    <button id="next" onclick="go(1)">Next &#8594;</button>
+  </div>
+</nav>
+
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <div class="slide slide-cover active">
+    <div class="cover-stripe"></div>
+    <div class="cover-left">
+      <div>
+        <div class="cover-eyebrow" style="margin-bottom:20px;">Capabilities Presentation · April 28, 2026</div>
+        <div class="cover-title">Modernizing the<br><span>Meridian</span><br>Inventory Dashboard</div>
+        <div class="cover-sub" style="margin-top:18px;">Accenture · Response to RFP #MC-2026-0417</div>
+      </div>
+      <div class="cover-footer">Copyright © 2026 Accenture. All rights reserved.</div>
+    </div>
+    <div class="cover-right">
+      <div style="margin-bottom:8px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(194,163,255,0.4)" stroke-width="1.2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </div>
+      <div class="cover-fact">
+        <div class="cover-fact-label">Budget (NTE)</div>
+        <div class="cover-fact-value">$85,000</div>
+        <div class="cover-fact-desc">Fixed fee · core scope (R1–R4 + D2)</div>
+      </div>
+      <div class="cover-fact">
+        <div class="cover-fact-label">Timeline</div>
+        <div class="cover-fact-value">8–9 weeks</div>
+        <div class="cover-fact-desc">From contract execution to handoff</div>
+      </div>
+      <div class="cover-fact">
+        <div class="cover-fact-label">Requirements covered</div>
+        <div class="cover-fact-value">R1 · R2 · R3 · R4 · D2</div>
+        <div class="cover-fact-desc">D1 + D3 available as $22K add-on</div>
+      </div>
+      <div class="cover-fact">
+        <div class="cover-fact-label">Stack</div>
+        <div class="cover-fact-value">Vue 3 · FastAPI</div>
+        <div class="cover-fact-desc">Playwright · GitHub Actions CI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Situation -->
+  <div class="slide slide-white">
+    <div class="eyebrow">The Situation</div>
+    <h2>A working system that can't be changed safely</h2>
+    <div class="rule"></div>
+    <div class="card-grid col3">
+      <div class="card pink-top">
+        <div class="card-icon pink">
+          <svg viewBox="0 0 24 24"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        </div>
+        <div class="card-tag pink">Defects</div>
+        <h3>Reports module — 8+ known issues</h3>
+        <p>Filter wiring incomplete, internationalization gaps, inconsistent API patterns, and console noise left unresolved when the previous vendor's contract ended in November 2024. The issues were logged but never fixed.</p>
+      </div>
+      <div class="card pink-top">
+        <div class="card-icon pink">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        </div>
+        <div class="card-tag pink">Blocked</div>
+        <h3>IT has blocked all changes</h3>
+        <p>No automated test coverage means Meridian IT cannot safely approve any change to the codebase. Every other requirement — Restocking, i18n, UI work — is gated behind this. R3 isn't just a nice-to-have; it unblocks everything else.</p>
+      </div>
+      <div class="card pink-top">
+        <div class="card-icon pink">
+          <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="12" y2="17"/></svg>
+        </div>
+        <div class="card-tag pink">Missing</div>
+        <h3>Two capability gaps</h3>
+        <p>Operations team (led by VP R. Tanaka) has no restocking visibility — purchase order decisions are manual and error-prone. Tokyo warehouse staff (12 people) work in English-only views despite variable English proficiency.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Approach -->
+  <div class="slide slide-dark">
+    <div class="eyebrow light">Our Approach</div>
+    <h2 class="light">Stabilize first. Then extend.</h2>
+    <div class="rule light"></div>
+    <div class="two-col">
+      <div>
+        <p class="body-text light" style="margin-bottom:20px;">We don't build new features on a broken foundation. Testing infrastructure goes in during week one — before we touch any production code. Every fix and every feature is covered by automated tests as it's built, not retrofitted at the end.</p>
+        <p class="body-text light">By the time we deliver the Restocking view, the Reports module is already clean and covered. When we hand off, Meridian IT receives a working CI pipeline that runs on schedule and on every pull request — not a test suite that requires integration work on their end.</p>
+        <p class="body-text light" style="margin-top:16px;">The previous vendor's handoff documentation is thin. We treat it as a starting point and conduct our own codebase audit in Phase 1 before committing to a final defect list.</p>
+      </div>
+      <div>
+        <div class="bullets">
+          <div class="bullet">
+            <div class="bullet-icon light"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <p class="light"><strong class="light">Weeks 1–2 · Phase 1</strong><br>Codebase audit, architecture docs (R4), test harness setup, confirm defect list</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon light"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+            <p class="light"><strong class="light">Weeks 2–4 · Phase 2</strong><br>Reports module remediation (R1) — each fix covered by a test before moving on</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon light"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <p class="light"><strong class="light">Weeks 4–7 · Phase 3</strong><br>Restocking recommendations view (R2) + full test coverage all views (R3)</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon light"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+            <p class="light"><strong class="light">Weeks 7–8 · Phase 4</strong><br>i18n extension to remaining modules, Tokyo warehouse views first (D2)</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon light"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <p class="light"><strong class="light">Weeks 8–9 · Phase 5</strong><br>Final test pass, CI validation, documentation review, formal IT handoff</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. R1 -->
+  <div class="slide slide-gray">
+    <div class="eyebrow">R1 — Required</div>
+    <h2>Reports Module Remediation</h2>
+    <div class="rule"></div>
+    <div class="card-grid col2">
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="card-tag">Audit First</div>
+        <h3>We don't assume the list is complete</h3>
+        <p>The RFP documents at least 8 defects. Our experience with thin vendor handoffs is that undocumented issues always surface during a real audit. We conduct a structured code review before writing a single fix — and share the full findings with Meridian at the end of Phase 1.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        </div>
+        <div class="card-tag">Filter Wiring</div>
+        <h3>All four filters, fully connected</h3>
+        <p>Time Period, Warehouse, Category, and Order Status must pass correctly via query params to the FastAPI backend and reflect accurately in the displayed data. We verify each filter end-to-end — both the request path and the rendered result — before closing the issue.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <div class="card-tag">i18n</div>
+        <h3>No hardcoded English strings</h3>
+        <p>Every user-facing string in the Reports view will be routed through the existing internationalization framework. This is prerequisite work for D2 — if we fix Reports properly now, the i18n extension phase is clean and additive rather than corrective.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="card-tag">Patterns</div>
+        <h3>Consistent Vue 3 Composition API</h3>
+        <p>The previous vendor left Reports components using the older Options API while the rest of the app was migrated to Composition API. We will complete that migration in Reports, bringing it in line with established patterns and making future maintenance straightforward.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. R2 -->
+  <div class="slide slide-white">
+    <div class="eyebrow">R2 — Required</div>
+    <h2>Restocking Recommendations View</h2>
+    <div class="rule"></div>
+    <div class="card-grid col3">
+      <div class="card teal-top">
+        <div class="card-icon teal">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="card-tag teal">Input</div>
+        <h3>Operator-supplied budget ceiling</h3>
+        <p>The operations team enters a budget ceiling. The system takes it from there — no spreadsheet, no manual cross-referencing of stock levels and demand data. A simple input that produces a clear, actionable output.</p>
+      </div>
+      <div class="card teal-top">
+        <div class="card-icon teal">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="card-tag teal">Logic</div>
+        <h3>Deficit × demand × budget ceiling</h3>
+        <p>Items below their reorder threshold are flagged. These are ranked by demand forecast — high-velocity items come first. The ranked list is then clipped to the operator's budget ceiling, so the most critical orders are always selected first. Logic runs server-side (FastAPI) for independent testability.</p>
+      </div>
+      <div class="card teal-top">
+        <div class="card-icon teal">
+          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+        <div class="card-tag teal">Output</div>
+        <h3>Ranked purchase order list</h3>
+        <p>Highest-priority items displayed first with quantity, estimated cost, and demand signal. The view is built as a standard Vue 3 component consistent with the rest of the application, accessible from main navigation. Uses existing <code>/api/inventory</code> and <code>/api/demand</code> — no new infrastructure needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. R3 -->
+  <div class="slide slide-gray">
+    <div class="eyebrow">R3 — Required</div>
+    <h2>Automated Browser Testing + CI Pipeline</h2>
+    <div class="rule"></div>
+    <div class="two-col">
+      <div>
+        <p class="body-text" style="margin-bottom:18px;">Playwright end-to-end tests cover all major views. Tests are written alongside fixes and features from day one — not retrofitted after delivery. By the time we hand off, every change we made is covered.</p>
+        <div class="bullets">
+          <div class="bullet">
+            <div class="bullet-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <p><strong>Dashboard</strong> — summary metrics load correctly, filter interactions work</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon"><svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+            <p><strong>Inventory</strong> — stock table renders, warehouse and category filters apply</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+            <p><strong>Orders</strong> — list renders, status and date filters return correct results</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <p><strong>Reports</strong> — all four filters verified end-to-end (ties directly to R1 fixes)</p>
+          </div>
+          <div class="bullet">
+            <div class="bullet-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></div>
+            <p><strong>Restocking</strong> — budget input accepted, recommendations render, edge cases (zero budget, all in-stock) handled</p>
+          </div>
+        </div>
+      </div>
+      <div style="gap:14px;">
+        <div class="card" style="border-top-color: var(--teal); margin-bottom:14px;">
+          <div class="card-icon teal">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <div class="card-tag teal">Delivered</div>
+          <h3>A working CI pipeline — not a handoff task</h3>
+          <p>GitHub Actions configuration included. Tests run automatically on a schedule and on every pull request. Meridian IT receives a complete, ready-to-run pipeline. No integration work required on their end.</p>
+        </div>
+        <div class="card" style="border-top-color: var(--gray-500);">
+          <div class="card-icon gray">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <div class="card-tag gray">Approach</div>
+          <h3>Tests written alongside delivery</h3>
+          <p>Each R1 fix ships with a test. Each R2 feature ships with a test. Coverage accumulates continuously — so the final test pass is a verification step, not a scramble.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. R4 -->
+  <div class="slide slide-white">
+    <div class="eyebrow">R4 — Required</div>
+    <h2>Architecture Documentation</h2>
+    <div class="rule"></div>
+    <div class="card-grid col2">
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="card-tag">Delivered Early</div>
+        <h3>In Meridian IT's hands by end of week 2</h3>
+        <p>Architecture documentation is delivered at the end of Phase 1 — before the main build work begins. IT has a complete current-state picture while we're remediating Reports, not after everything is done. This is how we avoid the "surprise at handoff" problem.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>
+        </div>
+        <div class="card-tag">Coverage</div>
+        <h3>Full stack and data flow</h3>
+        <p>Frontend (Vue 3 / Vite), backend (FastAPI), data layer (JSON files — no database), API surface with all endpoints and filters, and the filter propagation path from UI to backend response. Formatted as an HTML diagram with a written narrative readable by both technical and non-technical stakeholders.</p>
+      </div>
+      <div class="card pink-top">
+        <div class="card-icon pink">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="card-tag pink">Honest</div>
+        <h3>Gaps and risks documented</h3>
+        <p>We note what the previous vendor left incomplete — no database, the partial Options→Composition API migration, thin handoff notes. These aren't surprises we hide; they're findings we surface so Meridian IT understands the full picture, not a sanitized version of it.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="card-tag">Source of Truth</div>
+        <h3>Updated at final handoff</h3>
+        <p>The architecture document is a living deliverable. After Phase 1 establishes the baseline, we update it to reflect any changes made during delivery — new endpoints added for R2, test infrastructure, i18n additions — so what Meridian IT receives at handoff is accurate, not stale.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Desirables -->
+  <div class="slide slide-gray">
+    <div class="eyebrow">D1 · D2 · D3 — Desired</div>
+    <h2>Optional Enhancements</h2>
+    <div class="rule"></div>
+    <div class="card-grid col3">
+      <div class="card blue-top">
+        <div class="card-icon blue">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="card-tag blue">D1 · Optional add-on</div>
+        <h3>UI Modernization</h3>
+        <p>Visual refresh aligned to Meridian's confirmed design system. We have one open question before contract execution: which design system or component library Meridian prefers. Our approach accommodates any reasonable answer — we just need confirmation at kickoff to avoid mid-engagement rework. The core engagement does not depend on D1.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <div class="card-tag">D2 · Included in core scope</div>
+        <h3>i18n Extension</h3>
+        <p>Extends the existing internationalization framework to remaining modules. Tokyo warehouse views are the priority — stock levels, orders, and any Reports views used by that team. We extend rather than replace the existing setup. R1 lays the groundwork: if we fix i18n gaps in Reports correctly, D2 is clean additive work. Delivered in Phase 4.</p>
+      </div>
+      <div class="card" style="border-top-color: var(--blue);">
+        <div class="card-icon blue">
+          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </div>
+        <div class="card-tag blue">D3 · Optional add-on (bundled with D1)</div>
+        <h3>Dark Mode</h3>
+        <p>Operator-selectable theme, persisted across sessions. Several Meridian warehouse floor stations run in low-light environments where dark mode meaningfully reduces eye strain during long shifts. Dark mode is bundled with D1 because implementing it via CSS custom properties during the initial UI pass costs a fraction of retrofitting it later. Separating D1 and D3 would create unnecessary rework.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Timeline -->
+  <div class="slide slide-white">
+    <div class="eyebrow">Timeline</div>
+    <h2>8–11 Weeks to Delivery</h2>
+    <div class="rule"></div>
+    <div class="tl-header">
+      <div class="tl-header-spacer"></div>
+      <div class="tl-week-labels">
+        <span>Wk 1</span><span>Wk 2</span><span>Wk 3</span><span>Wk 4</span>
+        <span>Wk 5</span><span>Wk 6</span><span>Wk 7</span><span>Wk 8</span><span>Wk 9+</span>
+      </div>
+      <div></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-row">
+        <div class="tl-label">R4 · Architecture docs</div>
+        <div class="tl-track"><div class="tl-fill purple" style="left:0%;width:22%;">Phase 1</div></div>
+        <div class="tl-weeks">2 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">R3 · Test harness setup</div>
+        <div class="tl-track"><div class="tl-fill purple" style="left:0%;width:22%;">Phase 1</div></div>
+        <div class="tl-weeks">2 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">R1 · Reports remediation</div>
+        <div class="tl-track"><div class="tl-fill pink" style="left:22%;width:28%;">Phase 2</div></div>
+        <div class="tl-weeks">2–3 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">R2 · Restocking view</div>
+        <div class="tl-track"><div class="tl-fill teal" style="left:44%;width:34%;">Phase 3</div></div>
+        <div class="tl-weeks">2–3 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">R3 · Full coverage (all views)</div>
+        <div class="tl-track"><div class="tl-fill teal" style="left:44%;width:34%;opacity:0.7;">Phase 3 — ongoing</div></div>
+        <div class="tl-weeks">concurrent</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">D2 · i18n extension</div>
+        <div class="tl-track"><div class="tl-fill purple" style="left:72%;width:17%;">Phase 4</div></div>
+        <div class="tl-weeks">1–2 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">D1 + D3 · UI + dark mode</div>
+        <div class="tl-track"><div class="tl-fill pale" style="left:44%;width:28%;">Optional · parallel to Phase 3</div></div>
+        <div class="tl-weeks">+2 wks</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-label">Phase 5 · Handoff</div>
+        <div class="tl-track"><div class="tl-fill gray" style="left:83%;width:17%;">Phase 5</div></div>
+        <div class="tl-weeks">1 wk</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Pricing -->
+  <div class="slide slide-gray">
+    <div class="eyebrow">Pricing</div>
+    <h2>Fixed Fee · Not-to-Exceed</h2>
+    <div class="rule"></div>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Scope</th>
+          <th>Phase</th>
+          <th>Fee</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="price-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>R1 — Reports remediation</span></td>
+          <td>Audit + all defects resolved + tests</td>
+          <td>Phase 2</td>
+          <td>$18,000</td>
+        </tr>
+        <tr>
+          <td><span class="price-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>R2 — Restocking view</span></td>
+          <td>Backend recommendation logic + Vue frontend</td>
+          <td>Phase 3</td>
+          <td>$28,000</td>
+        </tr>
+        <tr>
+          <td><span class="price-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>R3 — Automated testing</span></td>
+          <td>Playwright suite + GitHub Actions CI pipeline</td>
+          <td>All phases</td>
+          <td>$16,000</td>
+        </tr>
+        <tr>
+          <td><span class="price-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>R4 — Architecture docs</span></td>
+          <td>HTML diagram + written narrative, updated at handoff</td>
+          <td>Phase 1</td>
+          <td>$8,000</td>
+        </tr>
+        <tr>
+          <td><span class="price-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>D2 — i18n extension</span></td>
+          <td>Tokyo-priority rollout to remaining modules</td>
+          <td>Phase 4</td>
+          <td>$15,000</td>
+        </tr>
+        <tr class="total">
+          <td colspan="3">Core scope total (R1–R4 + D2) · Fixed fee NTE</td>
+          <td>$85,000</td>
+        </tr>
+        <tr class="optional">
+          <td>D1 + D3 — UI modernization + dark mode</td>
+          <td>Optional add-on · runs parallel to Phase 3</td>
+          <td>Phases 3–4</td>
+          <td>+$22,000</td>
+        </tr>
+        <tr class="optional">
+          <td colspan="3">Total with optional D1 + D3</td>
+          <td>$107,000</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px; font-size:12px; color:#aaa;">All fees are fixed. We absorb overruns on our side. Meridian does not pay for scope creep.</p>
+  </div>
+
+  <!-- 11. Why Us -->
+  <div class="slide slide-dark">
+    <div class="eyebrow light">Why Accenture</div>
+    <h2 class="light">We have done this before. Exactly this.</h2>
+    <div class="rule light"></div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+        <div class="stat-num">11</div>
+        <div class="stat-label">defects resolved on a comparable<br>Vue dashboard remediation</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="stat-num">18%</div>
+        <div class="stat-label">reduction in over-ordering<br>after restocking feature delivery</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></div>
+        <div class="stat-num">2 wks</div>
+        <div class="stat-label">for Tokyo team to fully onboard<br>after i18n delivery</div>
+      </div>
+    </div>
+    <div class="card-grid col3">
+      <div class="card dark">
+        <div class="card-tag">Dashboard remediation</div>
+        <h3>Inherited broken Vue dashboard from prior vendor</h3>
+        <p>Thin handoff documentation, no tests, IT blocking all changes. We established Playwright coverage before touching production code. Fixed 11 defects (9 documented, 2 found in audit). IT approved the first post-handoff change within a week of handoff.</p>
+      </div>
+      <div class="card dark">
+        <div class="card-tag">Restocking recommendations</div>
+        <h3>Deficit × demand × budget ceiling</h3>
+        <p>Same recommendation logic Meridian is asking for — built for a precision parts manufacturer with EMEA operations. Backend logic in Python, Vue frontend. Delivered in 4 weeks. Reduced over-ordering by 18% in Q1 post-launch.</p>
+      </div>
+      <div class="card dark">
+        <div class="card-tag">APAC i18n rollout</div>
+        <h3>Tokyo warehouse opening — same stack, same driver</h3>
+        <p>Extended an English-only Vue 3 application for warehouse staff at a new Tokyo facility. Variable English proficiency, same pattern as Meridian's D2 ask. Team fully onboarded to the localized interface within two weeks of delivery.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. Closing -->
+  <div class="slide slide-closing">
+    <div class="eyebrow light">Next Steps</div>
+    <h2 class="light" style="font-size:44px;">Ready when you are.</h2>
+    <div class="rule light"></div>
+    <div class="next-steps">
+      <div class="next-step">
+        <div class="next-step-num">1</div>
+        <div class="next-step-body">
+          <div class="next-step-title">Confirm preferred design system</div>
+          <div class="next-step-desc">The one open question before contract execution. Our technical approach accommodates any reasonable answer — Tailwind, Material, an internal system — we just need confirmation at kickoff to avoid design rework mid-engagement. This does not block the core scope.</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">2</div>
+        <div class="next-step-body">
+          <div class="next-step-title">Sign contract → Phase 1 begins within one week</div>
+          <div class="next-step-desc">We will stand up the development environment, begin the codebase audit, and have the test harness running within the first week. No ramp-up delays.</div>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">3</div>
+        <div class="next-step-body">
+          <div class="next-step-title">Architecture documentation in Meridian IT's hands by end of week 2</div>
+          <div class="next-step-desc">IT gets the full current-state picture — frontend, backend, data layer, gaps, risks — before the main build begins. Not at the end of the engagement.</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:24px; font-size:12px; color:rgba(255,255,255,0.4);">marcin.pilarczyk@accenture.com · Copyright © 2026 Accenture. All rights reserved.</p>
+  </div>
+
+</div>
+
+<div class="dots" id="dots"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsEl = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = Math.max(0, Math.min(total - 1, n));
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+    document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+    document.getElementById('prev').disabled = current === 0;
+    document.getElementById('next').disabled = current === total - 1;
+  }
+
+  function go(dir) { goTo(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+</script>
+</body>
+</html>
