@@ -15,6 +15,11 @@ export default {
   // Dashboard
   dashboard: {
     title: '概要',
+    actions: {
+      createPO: '発注書作成',
+      viewPO: '発注書確認',
+      actions: '操作'
+    },
     kpi: {
       title: '主要業績評価指標',
       inventoryTurnover: '在庫回転率',
@@ -143,6 +148,8 @@ export default {
     costBreakdown: '調達 + 運営 + 人件費 + 間接費',
     margin: 'マージン',
     perOrderRevenue: '注文あたりの収益',
+    revenueTooltip: '収益',
+    costsTooltip: 'コスト',
     revenueVsCosts: {
       title: '月別収益対コスト',
       revenue: '収益',
@@ -197,7 +204,8 @@ export default {
     category: 'カテゴリ',
     orderStatus: '注文ステータス',
     all: 'すべて',
-    allMonths: 'すべての月'
+    allMonths: 'すべての月',
+    resetAll: 'すべてのフィルターをリセット'
   },
 
   // Statuses
@@ -345,6 +353,9 @@ export default {
     clear: 'クリア',
     noDeficits: 'すべての品目が十分な在庫があります — 補充は不要です。',
     enterBudget: '不足品目をすべて表示中。予算上限を入力するとリストを絞り込めます。',
+    itemSingular: '品目',
+    itemPlural: '品目',
+    skippedOverBudget: '予算超過のためスキップ',
     stats: {
       belowReorder: '再注文点以下の品目',
       withinBudget: '予算内',
@@ -386,7 +397,8 @@ export default {
     search: '検索',
     filter: 'フィルター',
     export: 'エクスポート',
-    items: '件'
+    items: '件',
+    deleteTask: 'タスクを削除'
   },
 
   // Product Names
