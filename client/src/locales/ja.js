@@ -6,6 +6,8 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    reports: 'レポート',
+    restocking: '補充推奨',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -302,6 +304,67 @@ export default {
     dueDate: '期限',
     addTask: 'タスクを追加',
     noTasks: 'タスクがありません。上記からタスクを追加してください！'
+  },
+
+  // Reports
+  reports: {
+    title: 'パフォーマンスレポート',
+    description: '四半期パフォーマンス指標と月次トレンドを表示',
+    quarterlyPerformance: '四半期パフォーマンス',
+    monthlyRevenueTrend: '月次売上トレンド',
+    monthOverMonth: '前月比分析',
+    noData: '選択したフィルターに該当するデータがありません',
+    table: {
+      quarter: '四半期',
+      totalOrders: '総注文数',
+      totalRevenue: '総売上',
+      avgOrderValue: '平均注文額',
+      fulfillmentRate: '履行率',
+      month: '月',
+      orders: '注文数',
+      revenue: '売上',
+      change: '変化',
+      growthRate: '成長率'
+    },
+    stats: {
+      totalRevenue: '総売上（年累計）',
+      avgMonthlyRevenue: '月平均売上',
+      totalOrders: '総注文数（年累計）',
+      bestQuarter: '最高パフォーマンス四半期',
+      na: 'N/A'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: '補充推奨',
+    description: '在庫不足と需要予測に基づいた発注推奨ランキング',
+    budgetLabel: '予算上限',
+    budgetPlaceholder: '予算を入力（例：50000）',
+    apply: '適用',
+    clear: 'クリア',
+    noDeficits: 'すべての品目が十分な在庫があります — 補充は不要です。',
+    enterBudget: '不足品目をすべて表示中。予算上限を入力するとリストを絞り込めます。',
+    stats: {
+      belowReorder: '再注文点以下の品目',
+      withinBudget: '予算内',
+      totalCost: '推定合計コスト',
+      remaining: '残余予算'
+    },
+    table: {
+      sku: 'SKU',
+      item: '品目',
+      category: 'カテゴリ',
+      warehouse: '倉庫',
+      onHand: '手持在庫',
+      reorderPt: '再注文点',
+      deficit: '不足数',
+      recQty: '推奨数量',
+      unitCost: '単価',
+      estCost: '推定コスト',
+      trend: '需要トレンド',
+      priority: '優先度'
+    }
   },
 
   // Language

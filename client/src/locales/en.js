@@ -6,6 +6,8 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    reports: 'Reports',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -302,6 +304,67 @@ export default {
     dueDate: 'Due Date',
     addTask: 'Add Task',
     noTasks: 'No tasks yet. Add your first task above!'
+  },
+
+  // Reports
+  reports: {
+    title: 'Performance Reports',
+    description: 'View quarterly performance metrics and monthly trends',
+    quarterlyPerformance: 'Quarterly Performance',
+    monthlyRevenueTrend: 'Monthly Revenue Trend',
+    monthOverMonth: 'Month-over-Month Analysis',
+    noData: 'No data available for the selected filters',
+    table: {
+      quarter: 'Quarter',
+      totalOrders: 'Total Orders',
+      totalRevenue: 'Total Revenue',
+      avgOrderValue: 'Avg Order Value',
+      fulfillmentRate: 'Fulfillment Rate',
+      month: 'Month',
+      orders: 'Orders',
+      revenue: 'Revenue',
+      change: 'Change',
+      growthRate: 'Growth Rate'
+    },
+    stats: {
+      totalRevenue: 'Total Revenue (YTD)',
+      avgMonthlyRevenue: 'Avg Monthly Revenue',
+      totalOrders: 'Total Orders (YTD)',
+      bestQuarter: 'Best Performing Quarter',
+      na: 'N/A'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking Recommendations',
+    description: 'Ranked purchase order recommendations based on stock deficit and demand forecast',
+    budgetLabel: 'Budget Ceiling',
+    budgetPlaceholder: 'Enter budget (e.g. 50000)',
+    apply: 'Apply',
+    clear: 'Clear',
+    noDeficits: 'All items are adequately stocked — no restocking required.',
+    enterBudget: 'Showing all deficit items. Enter a budget ceiling to clip the list.',
+    stats: {
+      belowReorder: 'Items Below Reorder Point',
+      withinBudget: 'Within Budget',
+      totalCost: 'Total Estimated Cost',
+      remaining: 'Budget Remaining'
+    },
+    table: {
+      sku: 'SKU',
+      item: 'Item',
+      category: 'Category',
+      warehouse: 'Warehouse',
+      onHand: 'On Hand',
+      reorderPt: 'Reorder Pt',
+      deficit: 'Deficit',
+      recQty: 'Rec. Qty',
+      unitCost: 'Unit Cost',
+      estCost: 'Est. Cost',
+      trend: 'Demand Trend',
+      priority: 'Priority'
+    }
   },
 
   // Language
